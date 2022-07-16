@@ -26,5 +26,8 @@
    "editor.defaultFormatter": "HookyQR.beautify",
    "[sql]": {
       "editor.defaultFormatter": "adpyke.vscode-sql-formatter"
+   },
+   "[python]": {
+      "editor.defaultFormatter": "ms-python.python"
    }
 }
