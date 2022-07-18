@@ -1,18 +1,17 @@
-import psycopg2
+# import psycopg2
 
-connection = psycopg2.connect(database="chinook")
+# connection = psycopg2.connect(database="chinook")
 
-cursor = connection.cursor()
+# cursor = connection.cursor()
 
 # cursor.execute('SELECT * FROM "Artist"')
-# cursor.execute('SELECT * FROM "Artist" WHERE "Name" = %s', ["Queen"])
-cursor.execute('SELECT * FROM "Artist" WHERE "ArtistId" = %s', [21])
 
-results = cursor.fetchall()
+# results = cursor.fetchall()
 
-# results = cursor.fetchone()
+# connection.close()
 
-connection.close()
+# for result in results:
+#     print(result)
 
-for result in results:
-    print(result)
+
+
