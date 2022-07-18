@@ -1,13 +1,16 @@
-from sqlalchemy import(Column, Integer, String, create_engine)
-from sqlalchemy.orm import declarative_base
+from sqlalchemy import (
+    create_engine, Column, Integer, String
+)
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 
+# executing the instructions from the "chinook" database
 db = create_engine("postgresql:///chinook")
-
 base = declarative_base()
 
 
+# create a class-based model for the "Programmer" table
 class Programmer(base):
     __tablename__ = "Programmer"
     id = Column(Integer, primary_key=True)
@@ -18,10 +21,13 @@ class Programmer(base):
     famous_for = Column(String)
 
 
+# instead of connecting to the database directly, we will ask for a session
+# create a new instance of sessionmaker, then point to our engine (the db)
 Session = sessionmaker(db)
-
+# opens an actual session by calling the Session() subclass defined above
 session = Session()
 
+# creating the database using declarative_base subclass
 base.metadata.create_all(db)
 
 # creating records on our Progammer table
@@ -74,11 +80,11 @@ tim_berners_lee = Programmer(
 )
 
 sir_fish = Programmer(
-    first_name="Sir",
-    last_name="Fish",
+    first_name="Hashim",
+    last_name="Aslam",
     gender="M",
-    nationality="Indian",
-    famous_for="Last Programmer"
+    nationality="British",
+    famous_for="Being Hashim"
 )
 
 session.add(ada_lovelace)
@@ -89,14 +95,51 @@ session.add(bill_gates)
 session.add(tim_berners_lee)
 session.add(sir_fish)
 
-Programmers = session.query(Programmer)
 
-for prog in Programmers:
+# # updating a single record
+# prog = session.query(Programmer).filter_by(id=7).first()
+# prog.famous_for = "World President"
+
+# people = session.query(Programmer)
+
+# for person in people:
+#     if person.gender == "F":
+#         person.gender = "Female"
+#     elif person.gender == "M":
+#         person.gender = "Male"
+#     else:
+#         print("Gender not defined")
+
+# deleting a single record
+fname = input("Enter a first name: ")
+lname = input("Enter a last name: ")
+programmer = session.query(Programmer).filter_by(
+    first_name=fname, last_name=lname).first()
+# defensive programming
+if programmer is not None:
+    print("Programmer Found: ", programmer.first_name + " " + programmer.last_name)
+    confirmation = input("Are you sure you want to delete this record? (y/n) ")
+    if confirmation.lower() == "y":
+        session.delete(programmer)
+        session.commit()
+        print("Programmer has been deleted")
+    else:
+        print("Programmer not deleted")
+else:
+    print("No records found")
+
+
+# commit session
+session.commit()
+
+# query the database to find all Programmers
+programmers = session.query(Programmer)
+for programmer in programmers:
     print(
-        prog.id,
-        prog.first_name + " " + prog.last_name,
-        prog.gender,
-        prog.nationality,
-        prog.famous_for,
+        programmer.id,
+        programmer.first_name + " " + programmer.last_name,
+        programmer.gender,
+        programmer.nationality,
+        programmer.famous_for,
         sep=" | "
     )
